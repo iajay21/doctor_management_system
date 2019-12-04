@@ -1,0 +1,82 @@
+<% if @user.role == "doctor" %>
+  <div class="col-xs-12 text-center">
+    <h1>Hi, <%= current_user.name %></h1>
+    <% if @doctor_appointments.present? %>
+      <hr/>
+      <table class="table">
+        <thead>
+          <tr>
+            <th class="text-left">Patient Name</th>
+            <th class="text-left">Appointment Time</th>
+            <th class="text-left">Tools</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @doctor_appointments.each do |da| %>
+            <tr>
+              <td class="text-left"><%= da.patient.name %></td>
+              <td class="text-left"><%= da.appointment_time.strftime("%d-%m-%Y %I:%M %P") %></td>
+              <td class="text-left">
+                <%= link_to "Accept", accept_appointment_path(da), class: "btn btn-primary", style: "margin-right: 5px;" %>
+                <%= link_to "Reject", appointment_path(da), method: :delete, data: {confirm: "Are you sure?"}, class: "btn btn-danger" %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% end %>
+    <% if @accepted_appointments.present? %>
+      <hr/>
+      <h4>Accepted Appointments<h4>
+      <hr/>
+      <table class="table">
+        <thead>
+          <tr>
+            <th class="text-left">Patient Name</th>
+            <th class="text-left">Appointment Time</th>
+            <th class="text-left">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @accepted_appointments.each do |aa| %>
+            <tr>
+              <td class="text-left"><%= aa.patient.name %></td>
+              <td class="text-left"><%= aa.appointment_time.strftime("%d-%m-%Y %I:%M %P") %></td>
+              <td class="text-left">Accepted</td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% end %>
+  </div>
+<% else %>
+  <div class="col-xs-12 text-center">
+    <h1>Hi, <%= current_user.name %></h1>
+    <% if @doctors.present? %>
+      <%= link_to "Book An Appointment", new_appointment_path, class: "btn btn-primary" %>
+    <% end %>
+    <hr/>
+    <% if @booked_appointments.present? %>
+      <table class="table">
+        <thead>
+          <tr>
+            <th class="text-left">Doctor Name</th>
+            <th class="text-left">Appointment Time</th>
+            <th class="text-left">Tools</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @booked_appointments.each do |ba| %>
+            <tr>
+              <td class="text-left"><%= ba.doctor.name %></td>
+              <td class="text-left"><%= ba.appointment_time.strftime("%d-%m-%Y %I:%M %P") %></td>
+              <td class="text-left"><%= link_to "edit", edit_appointment_path(ba), class: "btn btn-primary", style: "margin-right: 5px;" %><%= link_to "Delete", appointment_path(ba), method: :delete, data: {confirm: "Are you sure?"}, class: "btn btn-danger" %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% else %>
+      <h4>You don't have booked appointment yet.</h4>
+    <% end %>
+  </div>
+<% end %>
